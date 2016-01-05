@@ -1035,11 +1035,11 @@ Vector2 TileMap::_map_to_world(int x,int y,bool p_ignore_ofs) const {
 	}
 	return ret;
 }
-Vector2 TileMap::map_to_world(const Vector2& p_pos,bool p_ignore_ofs) const {
+Vector2 TileMap::map_to_world(const Point2i& p_pos,bool p_ignore_ofs) const {
 
 	return _map_to_world(p_pos.x,p_pos.y,p_ignore_ofs);
 }
-Vector2 TileMap::world_to_map(const Vector2& p_pos) const{
+Point2i TileMap::world_to_map(const Vector2& p_pos) const{
 
 	Vector2 ret = get_cell_transform().affine_inverse().xform(p_pos);
 
@@ -1059,7 +1059,7 @@ Vector2 TileMap::world_to_map(const Vector2& p_pos) const{
 		default: {}
 	}
 
-	return ret.floor();
+	return Point2i(ret.floor());
 }
 
 void TileMap::set_y_sort_mode(bool p_enable) {
@@ -1084,7 +1084,7 @@ Array TileMap::get_used_cells() const {
 	int i=0;
 	for (Map<PosKey,Cell>::Element *E=tile_map.front();E;E=E->next()) {
 
-		Vector2 p (E->key().x,E->key().y);
+		Point2i p (E->key().x,E->key().y);
 		a[i++]=p;
 	}
 

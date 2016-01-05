@@ -35959,13 +35959,13 @@ This method controls whether the position between two cached points is interpola
 			<return type="Array">
 			</return>
 			<description>
-			Return an array of all cells containing a tile from the tileset (i.e. a tile index different from -1).
+			Return a Point2i array of all cell coordinates containing a tile from the tileset (i.e. a tile index different from -1).
 			</description>
 		</method>
 		<method name="map_to_world" qualifiers="const">
 			<return type="Vector2">
 			</return>
-			<argument index="0" name="mappos" type="Vector2">
+			<argument index="0" name="mappos" type="Point2i">
 			</argument>
 			<argument index="1" name="ignore_half_ofs" type="bool" default="false">
 			</argument>
@@ -35975,7 +35975,7 @@ This method controls whether the position between two cached points is interpola
 			</description>
 		</method>
 		<method name="world_to_map" qualifiers="const">
-			<return type="Vector2">
+			<return type="Point2i">
 			</return>
 			<argument index="0" name="worldpos" type="Vector2">
 			</argument>

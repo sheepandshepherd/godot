@@ -244,8 +244,8 @@ public:
 	Matrix32 get_cell_transform() const;
 	Vector2 get_cell_draw_offset() const;
 
-	Vector2 map_to_world(const Vector2& p_pos, bool p_ignore_ofs=false) const;
-	Vector2 world_to_map(const Vector2& p_pos) const;
+	Vector2 map_to_world(const Point2i& p_pos, bool p_ignore_ofs=false) const;
+	Point2i world_to_map(const Vector2& p_pos) const;
 
 	void set_y_sort_mode(bool p_enable);
 	bool is_y_sort_mode_enabled() const;
