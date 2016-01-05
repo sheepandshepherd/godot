@@ -336,6 +336,8 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 	VCALL_LOCALMEM0R(Vector2,angle);
 //	VCALL_LOCALMEM1R(Vector2,cross);
 
+	VCALL_LOCALMEM0R(Point2i,get_aspect);
+
 	VCALL_LOCALMEM0R(Rect2,get_area);
 	VCALL_LOCALMEM1R(Rect2,intersects);
 	VCALL_LOCALMEM1R(Rect2,encloses);
@@ -748,6 +750,11 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 		r_ret=Vector2(*p_args[0],*p_args[1]);
 	}
 
+	static void Point2i_init1(Variant& r_ret,const Variant** p_args) {
+
+		r_ret=Point2i(*p_args[0],*p_args[1]);
+	}
+
 	static void Rect2_init1(Variant& r_ret,const Variant** p_args) {
 
 		r_ret=Rect2(*p_args[0],*p_args[1]);
@@ -1012,6 +1019,7 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			case VECTOR2_ARRAY: return Vector2Array();; 	// 25
 			case VECTOR3_ARRAY: return Vector3Array();; 	// 25
 			case COLOR_ARRAY: return ColorArray();;
+			case POINT2I: return Point2i();
 			default: return Variant();
 		}
 
@@ -1082,6 +1090,7 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			case VECTOR2_ARRAY: return (Vector2Array(*p_args[0])); 	// 25
 			case VECTOR3_ARRAY: return (Vector3Array(*p_args[0])); 	// 25
 			case COLOR_ARRAY: return (ColorArray(*p_args[0]));
+			case POINT2I: { return (p_args[0]->type==Variant::VECTOR2)?Point2i((*p_args[0]).operator Vector2()):Point2i((*p_args[0]).operator Point2i()); }
 			default: return Variant();
 		}
 	}
@@ -1323,6 +1332,8 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	ADDFUNC1(VECTOR2,VECTOR2,Vector2,slide,VECTOR2,"vec",varray());
 	ADDFUNC1(VECTOR2,VECTOR2,Vector2,reflect,VECTOR2,"vec",varray());
 	//ADDFUNC1(VECTOR2,REAL,Vector2,cross,VECTOR2,"with",varray());
+
+	ADDFUNC0(POINT2I,REAL,Point2i,get_aspect,varray());
 
 	ADDFUNC0(RECT2,REAL,Rect2,get_area,varray());
 	ADDFUNC1(RECT2,BOOL,Rect2,intersects,RECT2,"b",varray());
@@ -1567,6 +1578,8 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	/* REGISTER CONSTRUCTORS */
 
 	_VariantCall::add_constructor(_VariantCall::Vector2_init1,Variant::VECTOR2,"x",Variant::REAL,"y",Variant::REAL);
+
+	_VariantCall::add_constructor(_VariantCall::Point2i_init1,Variant::POINT2I,"x",Variant::INT,"y",Variant::INT);
 
 	_VariantCall::add_constructor(_VariantCall::Rect2_init1,Variant::RECT2,"pos",Variant::VECTOR2,"size",Variant::VECTOR2);
 	_VariantCall::add_constructor(_VariantCall::Rect2_init2,Variant::RECT2,"x",Variant::REAL,"y",Variant::REAL,"width",Variant::REAL,"height",Variant::REAL);

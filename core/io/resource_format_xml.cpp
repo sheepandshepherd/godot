@@ -1253,6 +1253,14 @@ Error ResourceInteractiveLoaderXML::parse_property(Variant& r_v, String &r_name)
 				data.get_slicec(',',1).to_double()
 			   );
 
+	} else if (type=="point2i") {
+
+
+		r_v=Point2i(
+				data.get_slicec(',',0).to_int(),
+				data.get_slicec(',',1).to_int()
+			   );
+
 	} else if (type=="plane") {
 
 		r_v=Plane(
@@ -2162,6 +2170,7 @@ void ResourceFormatSaverXMLInstance::write_property(const String& p_name,const V
 		case Variant::REAL:		type="real"; break;
 		case Variant::STRING:		type="string"; break;
 		case Variant::VECTOR2:		type="vector2"; break;
+		case Variant::POINT2I:		type="point2i"; break;
 		case Variant::RECT2:		type="rect2"; break;
 		case Variant::VECTOR3:		type="vector3"; break;
 		case Variant::PLANE:		type="plane"; break;
@@ -2317,6 +2326,11 @@ void ResourceFormatSaverXMLInstance::write_property(const String& p_name,const V
 
 			Vector2 v = p_property;
 			write_string( rtoss(v.x) +", "+rtoss(v.y) );
+		} break;
+		case Variant::POINT2I: {
+
+			Point2i v = p_property;
+			write_string( itos(v.x) +", "+itos(v.y) );
 		} break;
 		case Variant::RECT2: {
 

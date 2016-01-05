@@ -548,6 +548,19 @@ Error VariantParser::parse_value(Token& token,Variant &value,Stream *p_stream,in
 
 			value=Vector2(args[0],args[1]);
 			return OK;
+		}else if (id=="Point2i"){
+
+			Vector<int> args;
+			Error err = _parse_construct<int32_t>(p_stream,args,line,r_err_str);
+			if (err)
+				return err;
+
+			if (args.size()!=2) {
+				r_err_str="Expected 2 arguments for constructor";
+			}
+
+			value=Point2i(args[0],args[1]);
+			return OK;
 		} else if (id=="Rect2"){
 
 			Vector<float> args;
@@ -1746,6 +1759,11 @@ Error VariantWriter::write(const Variant& p_variant, StoreStringFunc p_store_str
 
 			Vector2 v = p_variant;
 			p_store_string_func(p_store_string_ud,"Vector2( "+rtoss(v.x) +", "+rtoss(v.y)+" )" );
+		} break;
+		case Variant::POINT2I: {
+
+			Point2i v = p_variant;
+			p_store_string_func(p_store_string_ud,"Point2i( "+itos(v.x) +", "+itos(v.y)+" )" );
 		} break;
 		case Variant::RECT2: {
 

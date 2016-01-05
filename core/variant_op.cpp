@@ -69,6 +69,7 @@ bool Variant::booleanize(bool &r_valid) const {
 		case VECTOR2_ARRAY:
 		case VECTOR3_ARRAY:
 		case COLOR_ARRAY:
+		case POINT2I:
 			r_valid=false;
 			return false;
 			default: {}
@@ -104,6 +105,7 @@ case m_name: {\
 		case INT: _RETURN( p_a._data.m_type m_op p_b._data._int);\
 		case REAL: _RETURN( p_a._data.m_type m_op p_b._data._real);\
 		case VECTOR2: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Vector2*>(p_b._data._mem));\
+		case POINT2I: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Point2i*>(p_b._data._mem));\
 		case VECTOR3: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Vector3*>(p_b._data._mem));\
 		default: {}\
 	}\
@@ -251,6 +253,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(==,REAL,_real);
 				DEFAULT_OP_STR(==,STRING,String);
 				DEFAULT_OP_LOCALMEM(==,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(==,POINT2I,Point2i);
 				DEFAULT_OP_LOCALMEM(==,RECT2,Rect2);
 				DEFAULT_OP_PTRREF(==,MATRIX32,_matrix32);
 				DEFAULT_OP_LOCALMEM(==,VECTOR3,Vector3);
@@ -343,6 +346,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(<,REAL,_real);
 				DEFAULT_OP_STR(<,STRING,String);
 				DEFAULT_OP_LOCALMEM(<,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(<,POINT2I,Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM(<,VECTOR3,Vector3);
@@ -409,6 +413,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(<=,REAL,_real);
 				DEFAULT_OP_STR(<=,STRING,String);
 				DEFAULT_OP_LOCALMEM(<=,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(<=,POINT2I,Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM(<=,VECTOR3,Vector3);
@@ -473,6 +478,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_NUM(+,REAL,_real);
 					DEFAULT_OP_STR(+,STRING,String);
 					DEFAULT_OP_LOCALMEM(+,VECTOR2,Vector2);
+					DEFAULT_OP_LOCALMEM(+,POINT2I,Point2i);
 					DEFAULT_OP_FAIL(RECT2);
 					DEFAULT_OP_FAIL(MATRIX32);
 					DEFAULT_OP_LOCALMEM(+,VECTOR3,Vector3);
@@ -531,6 +537,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(-,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM(-,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(-,POINT2I,Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM(-,VECTOR3,Vector3);
@@ -572,6 +579,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM_VEC(*,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM_NUM(*,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM_NUM(*,POINT2I,Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				case MATRIX32: {
 
@@ -695,6 +703,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(/,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM_NUM(/,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM_NUM(/,POINT2I,Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM_NUM(/,VECTOR3,Vector3);
@@ -737,6 +746,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_NUM_NEG(REAL,_real);
 					DEFAULT_OP_FAIL(STRING);
 					DEFAULT_OP_LOCALMEM_NEG(VECTOR2,Vector2);
+					DEFAULT_OP_LOCALMEM_NEG(POINT2I,Point2i);
 					DEFAULT_OP_FAIL(RECT2);
 					DEFAULT_OP_FAIL(MATRIX32);
 					DEFAULT_OP_LOCALMEM_NEG(VECTOR3,Vector3);
@@ -1925,6 +1935,39 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 				}
 			}
 		} break;
+		case POINT2I: {
+
+			if (p_value.type!=Variant::INT)
+				return;
+
+			if (p_index.get_type()==Variant::INT) {
+				// scalar index
+				int idx=p_index;
+
+				if (idx>=0 && idx<2) {
+
+					Point2i *v=reinterpret_cast<Point2i*>(_data._mem);
+					valid=true;
+					(*v)[idx]=p_value;
+					return;
+				}
+			} else if (p_index.get_type()==Variant::STRING) {
+				//scalar name
+
+				const String *str=reinterpret_cast<const String*>(p_index._data._mem);
+				Point2i *v=reinterpret_cast<Point2i*>(_data._mem);
+				if (*str=="x" || *str=="width") {
+					valid=true;
+					v->x=p_value;
+					return;
+				} else if (*str=="y" || *str=="height") {
+					valid=true;
+					v->y=p_value;
+					return;
+				}
+			}
+
+		} break;
 		default: return;
 	}
 
@@ -2593,6 +2636,32 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 				}
 			}
 		} break;
+		case POINT2I: {
+
+			if (p_index.get_type()==Variant::INT) {
+				// scalar index
+				int idx=p_index;
+				if (idx>=0 && idx<2) {
+
+					const Point2i *v=reinterpret_cast<const Point2i*>(_data._mem);
+					valid=true;
+					return (*v)[idx];
+				}
+			} else if (p_index.get_type()==Variant::STRING) {
+				//scalar name
+
+				const String *str=reinterpret_cast<const String*>(p_index._data._mem);
+				const Point2i *v=reinterpret_cast<const Point2i*>(_data._mem);
+				if (*str=="x" || *str=="width") {
+					valid=true;
+					return v->x;
+				} else if (*str=="y" || *str=="height") {
+					valid=true;
+					return v->y;
+				}
+			}
+
+		} break;
 		default: return Variant();
 	}
 
@@ -3037,6 +3106,14 @@ void Variant::get_property_list(List<PropertyInfo> *p_list) const {
 		case COLOR_ARRAY: {
 
 			//nothing
+		} break;
+		case POINT2I: {
+
+			p_list->push_back( PropertyInfo(Variant::INT,"x"));
+			p_list->push_back( PropertyInfo(Variant::INT,"y"));
+			p_list->push_back( PropertyInfo(Variant::INT,"width"));
+			p_list->push_back( PropertyInfo(Variant::INT,"height"));
+
 		} break;
 		default: {}
 	}

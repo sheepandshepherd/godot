@@ -232,6 +232,7 @@ void ConnectDialog::_add_bind() {
 		case Variant::REAL: value = 0.0; break;
 		case Variant::STRING: value = ""; break;
 		case Variant::VECTOR2: value = Vector2(); break;
+		case Variant::POINT2I: value = Point2i(); break;
 		case Variant::RECT2: value = Rect2(); break;
 		case Variant::VECTOR3: value = Vector3(); break;
 		case Variant::PLANE: value = Plane(); break;
@@ -339,6 +340,7 @@ ConnectDialog::ConnectDialog() {
 	type_list->add_item("string",Variant::STRING);
 	//type_list->add_separator();
 	type_list->add_item("Vector2",Variant::VECTOR2);
+	type_list->add_item("Point2i",Variant::POINT2I);
 	type_list->add_item("Rect2",Variant::RECT2);
 	type_list->add_item("Vector3",Variant::VECTOR3);
 	type_list->add_item("Plane",Variant::PLANE);

@@ -68,6 +68,7 @@ enum {
 	VARIANT_VECTOR3_ARRAY=35,
 	VARIANT_COLOR_ARRAY=36,
 	VARIANT_VECTOR2_ARRAY=37,
+	VARIANT_POINT2I=38,
 
 	IMAGE_ENCODING_EMPTY=0,
 	IMAGE_ENCODING_RAW=1,
@@ -152,6 +153,14 @@ Error ResourceInteractiveLoaderBinary::parse_variant(Variant& r_v)  {
 			Vector2 v;
 			v.x=f->get_real();
 			v.y=f->get_real();
+			r_v=v;
+
+		} break;
+		case VARIANT_POINT2I: {
+
+			Point2i v;
+			v.x=f->get_32();
+			v.y=f->get_32();
 			r_v=v;
 
 		} break;
@@ -1482,6 +1491,14 @@ void ResourceFormatSaverBinaryInstance::write_variant(const Variant& p_property,
 			Vector2 val=p_property;
 			f->store_real(val.x);
 			f->store_real(val.y);
+
+		} break;
+		case Variant::POINT2I: {
+
+			f->store_32(VARIANT_POINT2I);
+			Point2i val=p_property;
+			f->store_32(val.x);
+			f->store_32(val.y);
 
 		} break;
 		case Variant::RECT2: {

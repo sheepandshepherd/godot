@@ -114,6 +114,9 @@ public:
 		VECTOR2_ARRAY,
 		VECTOR3_ARRAY,
 		COLOR_ARRAY,
+
+		// integer vector
+		POINT2I,
 			
 		VARIANT_MAX
 		
@@ -210,6 +213,7 @@ public:
 	operator String() const;
 	operator StringName() const;
 	operator Vector2() const;
+	operator Point2i() const;
 	operator Rect2() const;
 	operator Vector3() const;
 	operator Plane() const;
@@ -282,6 +286,7 @@ public:
 	Variant(const char * const p_cstring);
 	Variant(const CharType * p_wstring);
 	Variant(const Vector2& p_vector2);
+	Variant(const Point2i& p_point2i);
 	Variant(const Rect2& p_rect2);
 	Variant(const Vector3& p_vector3);
 	Variant(const Plane& p_plane);

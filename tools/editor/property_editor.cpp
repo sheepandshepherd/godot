@@ -445,6 +445,16 @@ bool CustomPropertyEditor::edit(Object* p_owner,const String& p_name,Variant::Ty
 			value_editor[0]->set_text( String::num( vec.x) );
 			value_editor[1]->set_text( String::num( vec.y) );
 		} break;
+		case Variant::POINT2I: {
+
+			List<String> names;
+			names.push_back("x");
+			names.push_back("y");
+			config_value_editors(2,2,10,names);
+			Vector2 vec=v;
+			value_editor[0]->set_text( String::num( vec.x) );
+			value_editor[1]->set_text( String::num( vec.y) );
+		} break;
 		case Variant::RECT2: {
 
 			List<String> names;
@@ -1323,6 +1333,15 @@ void CustomPropertyEditor::_modified(String p_string) {
 			emit_signal("variant_changed");
 
 		} break;
+		case Variant::POINT2I: {
+
+			Point2i vec;
+			vec.x=value_editor[0]->get_text().to_int();
+			vec.y=value_editor[1]->get_text().to_int();
+			v=vec;
+			emit_signal("variant_changed");
+
+		} break;
 		case Variant::RECT2: {
 
 			Rect2 r2;
@@ -1497,6 +1516,7 @@ void CustomPropertyEditor::_focus_enter() {
 		case Variant::REAL:
 		case Variant::STRING:
 		case Variant::VECTOR2:
+		case Variant::POINT2I:
 		case Variant::RECT2:
 		case Variant::VECTOR3:
 		case Variant::PLANE:
@@ -1522,6 +1542,7 @@ void CustomPropertyEditor::_focus_exit() {
 		case Variant::REAL:
 		case Variant::STRING:
 		case Variant::VECTOR2:
+		case Variant::POINT2I:
 		case Variant::RECT2:
 		case Variant::VECTOR3:
 		case Variant::PLANE:
@@ -2014,6 +2035,7 @@ void PropertyEditor::set_item_text(TreeItem *p_item, int p_type, const String& p
 		case Variant::VECTOR3:
 		case Variant::QUAT:
 		case Variant::VECTOR2:
+		case Variant::POINT2I:
 		case Variant::_AABB:
 		case Variant::RECT2:
 		case Variant::MATRIX32:
@@ -2910,6 +2932,15 @@ void PropertyEditor::update_tree() {
 
 			} break;
 			case Variant::VECTOR2: {
+
+				item->set_cell_mode( 1, TreeItem::CELL_MODE_CUSTOM );
+				item->set_editable( 1, true );
+				item->set_text(1,obj->get(p.name));
+				if (show_type_icons)
+					item->set_icon( 0,get_icon("Vector2","EditorIcons") );
+
+			} break;
+			case Variant::POINT2I: {
 
 				item->set_cell_mode( 1, TreeItem::CELL_MODE_CUSTOM );
 				item->set_editable( 1, true );

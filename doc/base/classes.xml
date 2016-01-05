@@ -38289,6 +38289,38 @@ This method controls whether the position between two cached points is interpola
 	<constants>
 	</constants>
 </class>
+<class name="Point2i" category="Built-In Types">
+	<brief_description>
+	Integer vector used for representing grid coordinates.
+	</brief_description>
+	<description>
+	</description>
+	<methods>
+		<method name="Point2i">
+			<return type="Point2i">
+			</return>
+			<argument index="0" name="x" type="int">
+			</argument>
+			<argument index="1" name="y" type="int">
+			</argument>
+			<description>
+			Constructs a new Point2i from the given x and y.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="x" type="int">
+		</member>
+		<member name="y" type="int">
+		</member>
+		<member name="width" type="int">
+		</member>
+		<member name="height" type="int">
+		</member>
+	</members>
+	<constants>
+	</constants>
+</class>
 <class name="Vector2Array" category="Built-In Types">
 	<brief_description>
 	An Array of Vector2.

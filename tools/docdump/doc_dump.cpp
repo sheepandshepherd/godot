@@ -196,6 +196,7 @@ void DocDump::dump(const String& p_file) {
 							case Variant::STRING_ARRAY:	//25
 							case Variant::VECTOR3_ARRAY:
 							case Variant::COLOR_ARRAY:
+							case Variant::POINT2I:
 								default_arg_text=Variant::get_type_name(default_arg.get_type())+"("+default_arg_text+")";
 								break;
 							case Variant::OBJECT:

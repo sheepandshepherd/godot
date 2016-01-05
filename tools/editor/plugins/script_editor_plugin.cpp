@@ -307,6 +307,7 @@ void ScriptTextEditor::_load_theme_settings() {
 	Color basetype_color= EDITOR_DEF("text_editor/base_type_color",Color(0.3,0.3,0.0));
 
 	get_text_edit()->add_keyword_color("Vector2",basetype_color);
+	get_text_edit()->add_keyword_color("Point2i",basetype_color);
 	get_text_edit()->add_keyword_color("Vector3",basetype_color);
 	get_text_edit()->add_keyword_color("Plane",basetype_color);
 	get_text_edit()->add_keyword_color("Quat",basetype_color);

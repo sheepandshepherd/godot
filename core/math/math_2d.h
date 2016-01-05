@@ -404,6 +404,9 @@ struct Point2i {
 	bool operator<(const Point2i& p_vec2) const { return (x==p_vec2.x)?(y<p_vec2.y):(x<p_vec2.x); }
 	bool operator>(const Point2i& p_vec2) const { return (x==p_vec2.x)?(y>p_vec2.y):(x>p_vec2.x); }
 
+	bool operator<=(const Point2i& p_vec2) const { return (x==p_vec2.x)?(y<=p_vec2.y):(x<=p_vec2.x); }
+	bool operator>=(const Point2i& p_vec2) const { return (x==p_vec2.x)?(y>=p_vec2.y):(x>=p_vec2.x); }
+
 	bool operator==(const Point2i& p_vec2) const;
 	bool operator!=(const Point2i& p_vec2) const;
 
