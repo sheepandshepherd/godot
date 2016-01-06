@@ -451,7 +451,7 @@ bool CustomPropertyEditor::edit(Object* p_owner,const String& p_name,Variant::Ty
 			names.push_back("x");
 			names.push_back("y");
 			config_value_editors(2,2,10,names);
-			Vector2 vec=v;
+			Point2i vec=v;
 			value_editor[0]->set_text( String::num( vec.x) );
 			value_editor[1]->set_text( String::num( vec.y) );
 		} break;
