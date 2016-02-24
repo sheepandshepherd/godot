@@ -31,6 +31,7 @@
 
 #include "reference.h"
 #include "variant.h"
+#include "array.h"
 
 class RangeIterator : public Reference
 {
@@ -52,11 +53,20 @@ public:
 
 	bool is_finished();
 
-	void _set_range(int stop);
-	void _set_range(int start, int stop);
-	void _set_range(int start, int stop, int step);
+	Array to_array();
 
-	Ref<RangeIterator> set_range(Variant arg1, Variant arg2 = Variant(), Variant arg3 = Variant());
+	void set_range(int stop);
+	void set_range(int start, int stop);
+	void set_range(int start, int stop, int step);
+
+	Ref<RangeIterator> _set_range(Variant arg1, Variant arg2 = Variant(), Variant arg3 = Variant());
+
+	void _init(Variant arg1, Variant arg2, Variant arg3);
+
+	RangeIterator();
+	RangeIterator(int stop);
+	RangeIterator(int start, int stop);
+	RangeIterator(int start, int stop, int step);
 };
 
 #endif // RANGE_ITERATOR_H

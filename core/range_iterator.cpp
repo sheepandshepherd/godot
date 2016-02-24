@@ -28,15 +28,15 @@
 /*************************************************************************/
 
 #include "range_iterator.h"
-#include "core_string_names.h"
 #include "object_type_db.h"
 
 void RangeIterator::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("_iter_init","arg"),&RangeIterator::_iter_init);
 	ObjectTypeDB::bind_method(_MD("_iter_next","arg"),&RangeIterator::_iter_next);
 	ObjectTypeDB::bind_method(_MD("_iter_get","arg"),&RangeIterator::_iter_get);
-	ObjectTypeDB::bind_method(_MD("isFinished"),&RangeIterator::is_finished);
-	ObjectTypeDB::bind_method(_MD("set_range","arg1","arg2","arg3"),&RangeIterator::set_range,DEFVAL(Variant()),DEFVAL(Variant()));
+	ObjectTypeDB::bind_method(_MD("is_finished"),&RangeIterator::is_finished);
+	ObjectTypeDB::bind_method(_MD("to_array"),&RangeIterator::to_array);
+	ObjectTypeDB::bind_method(_MD("set_range","arg1","arg2","arg3"),&RangeIterator::_set_range,DEFVAL(Variant()),DEFVAL(Variant()));
 }
 
 bool RangeIterator::_iter_init(Variant arg) {
@@ -63,40 +63,107 @@ bool RangeIterator::is_finished() {
 	}
 }
 
-void RangeIterator::_set_range(int stop) {
+Array RangeIterator::to_array() {
+	if (step==0) {
+		ERR_EXPLAIN("step is zero!");
+		ERR_FAIL_V(Array());
+	}
+
+	Array arr(true);
+	if (current >= stop && step > 0) {
+		return arr;
+	}
+	if (current <= stop && step < 0) {
+		return arr;
+	}
+
+	//calculate how many
+	int count=0;
+	if (step > 0) {
+		count=((stop-current-1)/step)+1;
+	} else {
+		count=((current-stop-1)/-step)+1;
+	}
+
+	arr.resize(count);
+
+	if (step > 0) {
+		int idx=0;
+		for(int i=current;i<stop;i+=step) {
+			arr[idx++]=i;
+		}
+	} else {
+		int idx=0;
+		for(int i=current;i>stop;i+=step) {
+			arr[idx++]=i;
+		}
+	}
+
+	return arr;
+}
+
+void RangeIterator::set_range(int stop) {
 	this->current = 0;
 	this->stop = stop;
 	this->step = (stop > 0)?(1):(-1);
 }
 
-void RangeIterator::_set_range(int start, int stop) {
+void RangeIterator::set_range(int start, int stop) {
 	this->current = start;
 	this->stop = stop;
 	this->step = (stop > start)?(1):(-1);
 }
 
-void RangeIterator::_set_range(int start, int stop, int step) {
+void RangeIterator::set_range(int start, int stop, int step) {
+	if(step == 0)
+	{
+		ERR_EXPLAIN("step is zero!");
+		ERR_FAIL();
+	}
+
 	this->current = start;
 	this->stop = stop;
 	this->step = step;
 }
 
-Ref<RangeIterator> RangeIterator::set_range(Variant arg1, Variant arg2, Variant arg3)
+Ref<RangeIterator> RangeIterator::_set_range(Variant arg1, Variant arg2, Variant arg3)
 {
-	if(arg2.get_type() == Variant::NIL)
+	bool valid = true;
+	if(arg1.get_type() == Variant::INT)
 	{
-		_set_range((int)arg1); // (end)
+		if(arg2.get_type() == Variant::INT)
+		{
+			if(arg3.get_type() == Variant::INT) set_range((int)arg1, (int)arg2, (int)arg3); // (start, end, step)
+			else if(arg3.get_type() == Variant::NIL) set_range((int)arg1, (int)arg2); // (start, end)
+			else valid = false;
+		}
+		else if(arg2.get_type() == Variant::NIL) set_range((int)arg1); // (end)
+		else valid = false;
 	}
-	else
+	else valid = false;
+
+	if(!valid)
 	{
-		if(arg3.get_type() == Variant::NIL) _set_range((int)arg1, (int)arg2); // (start, end)
-		else _set_range((int)arg1, (int)arg2, (int)arg3); // (start, end, step)
+		ERR_EXPLAIN("Invalid type in function 'set_range' in base 'RangeIterator'. Expected 1, 2, or 3 ints.");
+		ERR_FAIL_V(Ref<RangeIterator>());
 	}
 	return Ref<RangeIterator>(this);
 }
 
+RangeIterator::RangeIterator() {
+	current = 0;
+	stop = 0;
+	step = 0;
+}
 
+RangeIterator::RangeIterator(int stop) {
+	set_range(stop);
+}
 
+RangeIterator::RangeIterator(int start, int stop) {
+	set_range(start, stop);
+}
 
-
-
+RangeIterator::RangeIterator(int start, int stop, int step) {
+	set_range(start, stop, step);
+}
